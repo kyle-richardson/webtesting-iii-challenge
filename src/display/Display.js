@@ -1,4 +1,5 @@
 import React from 'react';
+import {connect} from "react-redux"
 
 const Display = ({ closed, locked }) => {
   const closedClass = `led ${closed ? 'red-led' : 'green-led'}`;
@@ -17,4 +18,9 @@ Display.defaultProps = {
   locked: false,
 };
 
-export default Display;
+const mapStateToProps = state => ({
+  closed: state.closed,
+  locked: state.locked
+})
+
+export default connect(mapStateToProps,{})(Display);

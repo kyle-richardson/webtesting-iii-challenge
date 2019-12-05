@@ -5,4 +5,15 @@ import './index.css';
 
 import Dashboard from './dashboard/Dashboard';
 
-ReactDOM.render(<Dashboard />, document.getElementById('root'));
+import { createStore, applyMiddleware } from 'redux';
+import { Provider } from 'react-redux';
+import {rootReducer} from './reducers'
+import thunk from 'redux-thunk';
+
+const store = createStore(rootReducer, applyMiddleware(thunk))
+
+const rootElement = document.getElementById('root');
+ReactDOM.render(
+    <Provider store={store}>
+        <Dashboard/>
+    </Provider>, rootElement);
