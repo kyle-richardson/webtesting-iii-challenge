@@ -4,6 +4,7 @@ import { Provider } from 'react-redux'
 import * as rtl from '@testing-library/react'
 import { initialState, rootReducer } from '../reducers'
 import Dashboard from "./Dashboard"
+import '@testing-library/jest-dom'
 
 function renderWithRedux(
   ui,
@@ -20,7 +21,7 @@ test('default state is open and unlocked', ()=> {
     expect(wrapper.queryByText("Open")).toBeTruthy();
     expect(wrapper.queryByText("Closed")).toBeNull();
     expect(wrapper.queryByText("Lock Gate").disabled).toBe(true)
-    expect(wrapper.queryByText("Close Gate").disabled).toBe(false)
+    expect(wrapper.queryByText("Close Gate")).toBeEnabled
 })
 
 test('close button renders closed text', () => {
