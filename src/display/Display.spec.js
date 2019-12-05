@@ -1,9 +1,21 @@
-import React from "react";
-import * as rtl from "@testing-library/react";
+import React from 'react'
+import { createStore } from 'redux'
+import { Provider } from 'react-redux'
+import * as rtl from '@testing-library/react'
+import { initialState, rootReducer } from '../reducers'
 import Display from "./Display"
 
+function renderWithRedux(
+  ui,
+  { initialState, store = createStore(rootReducer, initialState) } = {}) {
+  return {
+    ...rtl.render(<Provider store={store}>{ui}</Provider>),
+    store,
+  }
+}
+
 test('default state is open and unlocked, and green', ()=> {
-    const wrapper = rtl.render(<Display locked={false} closed={false}/>)
+    const wrapper = renderWithRedux(<Display />)
 
     expect(wrapper.queryByText("Open")).toBeTruthy();
     expect(wrapper.queryByText("Closed")).toBeNull();
@@ -16,13 +28,26 @@ test('default state is open and unlocked, and green', ()=> {
 })
 
 test('close gate changes color to red', ()=> {
-    const wrapper = rtl.render(<Display locked={false} closed={true}/>)
+    const wrapper = renderWithRedux(<Display />, {
+        initialState: { 
+            closed: true,
+            locked: false
+         },
+        })
 
     expect(wrapper.getByText("Closed").classList.contains('red-led')).toBe(true)
 })
 
 test('locked gate changes color to red', ()=> {
-    const wrapper = rtl.render(<Display locked={true} closed={true}/>)
+    const wrapper = renderWithRedux(<Display />, {
+        initialState: { 
+            closed: true,
+            locked: true
+         },
+        })
 
     expect(wrapper.getByText("Locked").classList.contains('red-led')).toBe(true)
 })
+
+
+

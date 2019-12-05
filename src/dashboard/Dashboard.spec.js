@@ -1,9 +1,21 @@
-import React from "react";
-import * as rtl from "@testing-library/react";
+import React from 'react'
+import { createStore } from 'redux'
+import { Provider } from 'react-redux'
+import * as rtl from '@testing-library/react'
+import { initialState, rootReducer } from '../reducers'
 import Dashboard from "./Dashboard"
 
+function renderWithRedux(
+  ui,
+  { initialState, store = createStore(rootReducer, initialState) } = {}) {
+  return {
+    ...rtl.render(<Provider store={store}>{ui}</Provider>),
+    store,
+  }
+}
+
 test('default state is open and unlocked', ()=> {
-    const wrapper = rtl.render(<Dashboard/>)
+    const wrapper = renderWithRedux(<Dashboard/>)
 
     expect(wrapper.queryByText("Open")).toBeTruthy();
     expect(wrapper.queryByText("Closed")).toBeNull();
@@ -12,7 +24,7 @@ test('default state is open and unlocked', ()=> {
 })
 
 test('close button renders closed text', () => {
-    const wrapper = rtl.render(<Dashboard/>)
+    const wrapper = renderWithRedux(<Dashboard/>)
 
     const Close= wrapper.getByText("Close Gate")
 
@@ -27,7 +39,7 @@ test('close button renders closed text', () => {
 })
 
 test('open button renders open text', () => {
-    const wrapper = rtl.render(<Dashboard/>)
+    const wrapper = renderWithRedux(<Dashboard/>)
     
     const Close= wrapper.getByText("Close Gate")
     rtl.act(()=> {
@@ -48,7 +60,7 @@ test('open button renders open text', () => {
 
 
 test('lock button renders locked text', () => {
-    const wrapper = rtl.render(<Dashboard/>)
+    const wrapper = renderWithRedux(<Dashboard/>)
 
   
     const Lock= wrapper.getByText("Lock Gate")
@@ -70,9 +82,7 @@ test('lock button renders locked text', () => {
 })
 
 test('unlock button renders unlocked text', () => {
-    const wrapper = rtl.render(<Dashboard/>)
-
-  
+    const wrapper = renderWithRedux(<Dashboard/>)
     
     const Close= wrapper.getByText("Close Gate")
     const Lock = wrapper.getByText("Lock Gate")
@@ -94,6 +104,4 @@ test('unlock button renders unlocked text', () => {
     expect(wrapper.queryByText("Lock Gate").disabled).toBe(false)
     expect(wrapper.queryByText("Open Gate").disabled).toBe(false)
 })
-
-
 
